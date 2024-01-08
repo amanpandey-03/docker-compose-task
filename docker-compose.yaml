@@ -1,6 +1,21 @@
-version: ''
+version: '2'
 
 services: 
+
+  frontend:
+    build: 
+      context: react
+    container_name: frontend
+    working_dir: /usr/src/app
+    networks: 
+      - node-network
+    volumes: 
+      - ./react:/usr/src/app
+      - /usr/src/app/node_modules
+    tty: true
+    ports: 
+      - "5173:5173"
+    command: npm run dev
 
   backend:
     build: 
@@ -19,21 +34,6 @@ services:
     depends_on:
        - db
 
-  frontend:
-    build: 
-      context: react
-    container_name: frontend
-    working_dir: /usr/src/app
-    networks: 
-      - node-network
-    volumes: 
-      - ./react:/usr/src/app
-      - /usr/src/app/node_modules
-    tty: true
-    ports: 
-      - "5050:5173"
-    command: npm run dev
-
   db:
     image: postgres
     container_name: db
@@ -44,7 +44,7 @@ services:
     environment: 
       - POSTGRES_PASSWORD=1234
     ports: 
-      - "5400:5432"
+      - "5432:5432"
     networks: 
       - node-network
 
