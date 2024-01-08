@@ -12,8 +12,9 @@ services:
     volumes: 
       - ./node:/usr/src/app
       - /usr/src/app/node_modules
+    tty: true
     ports: 
-      - "4040:3000"
+      - "3000:3000"
     command: npm run start
     depends_on:
        - db
@@ -35,17 +36,15 @@ services:
 
   db:
     image: postgres
-    env_file: 
-      - ./node/.env
-    container_name: ${DB_HOST}
+    container_name: db
     restart: always
-    # tty: true
+    tty: true
     volumes:
       - ./data:/var/lib/postgresql/data
     environment: 
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_PASSWORD=1234
     ports: 
-      - "5005:5432"
+      - "5400:5432"
     networks: 
       - node-network
 
@@ -62,7 +61,12 @@ services:
     depends_on:
        - backend
        - frontend
+
   
-networks: 
+networks:
   node-network:
-    driver: bridge    
+    driver: bridge
+  # frontend-network:
+  #   driver: bridge   
+  # backend-network:
+  #   driver: bridge 
